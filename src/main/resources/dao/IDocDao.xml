@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">-->
+
+<!--</beans>-->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pilot.hospitalmanagement.dao.IDocDao">
+    <resultMap id="DocResultMap" type="com.pilot.hospitalmanagement.Po.Doc">
+        <id column="docID" jdbcType="VARCHAR" property="docID" />
+        <result column="pID" jdbcType="VARCHAR" property="pID" />
+        <result column="cID" jdbcType="VARCHAR" property="cID" />
+        <result column="bID" jdbcType="VARCHAR" property="bID" />
+        <result column="dID" jdbcType="VARCHAR" property="dID" />
+        <result column="preID" jdbcType="VARCHAR" property="preID" />
+
+        <result column="docUserSay" jdbcType="VARCHAR" property="docUserSay" />
+        <result column="docCreateTime" jdbcType="DATE" property="docCreateTime" />
+        <result column="docFinishTime" jdbcType="DATE" property="docFinishTime" />
+        <result column="docStatus" jdbcType="VARCHAR" property="docStatus" />
+
+        <result column="docAdvice" jdbcType="VARCHAR" property="docAdvice" />
+
+    </resultMap>
+
+
+
+<!--增加一条病历记录-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.Doc">
+        insert into Doc (docID,pID,cID,bID,dID,preID, docUserSay,
+                         docCreateTime, docFinishTime, docStatus, docAdvice)
+        values (#{docID,jdbcType=VARCHAR}, #{pID,jdbcType=VARCHAR},#{cID,jdbcType=VARCHAR},#{bID,jdbcType=VARCHAR},
+                #{dID,jdbcType=VARCHAR}, #{preID,jdbcType=VARCHAR},#{docUserSay,jdbcType=VARCHAR},
+                #{docCreateTime,jdbcType=DATE}, #{docFinishTime,jdbcType=DATE}, #{docStatus,jdbcType=VARCHAR},
+                #{docAdvice, jdbcType=VARCHAR}
+               )
+    </insert>
+
+<!--    按ID删除病历-->
+    <delete id="deleteBydocID" parameterType="java.lang.String">
+        delete from Doc
+        where docID = #{docID,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="updateBydocID" parameterType="com.pilot.hospitalmanagement.Po.Doc">
+        update Doc
+        <set>
+            <if test="pID != null">
+                pID =  #{pID,jdbcType=VARCHAR},
+            </if>
+            <if test="cID != null">
+                cID =  #{cID,jdbcType=VARCHAR},
+            </if>
+            <if test="bID != null">
+                bID =  #{bID,jdbcType=VARCHAR},
+            </if>
+            <if test="dID != null">
+                dID =  #{dID,jdbcType=VARCHAR},
+            </if>
+            <if test="preID != null">
+                preID =  #{preID,jdbcType=VARCHAR},
+            </if>
+            <if test="docUserSay != null">
+                docUserSay = #{docUserSay,jdbcType=VARCHAR},
+            </if>
+            <if test="docCreateTime != null">
+                docCreateTime = #{docCreateTime,jdbcType=DATE},
+            </if>
+            <if test="docFinishTime != null">
+                docFinishTime = #{docFinishTime,jdbcType=DATE},
+            </if>
+            <if test="docStatus!= null">
+                docStatus = #{docStatus,jdbcType=VARCHAR}
+            </if>
+            <if test="docAdvice!= null">
+                docAdvice = #{docAdvice,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where docID = #{docID,jdbcType=VARCHAR}
+    </update>
+    
+<!--    按照病历ID查询病历-->
+
+    <select id="selectBydocID" parameterType="java.lang.String" resultMap="DocResultMap">
+        select
+        *
+        from Doc
+        where docID =#{docID,jdbcType=VARCHAR}
+    </select>
+<!--    查询所有病历-->
+    <select id="findAll" resultMap="DocResultMap">
+        select * from Doc
+    </select>
+<!--    按照病人ID查询其所有病例-->
+    <select id="selectBypID" parameterType="java.lang.String" resultMap="DocResultMap">
+        select * from Doc
+        where pID = #{pID,jdbcType=VARCHAR}
+    </select>
+
+    <update id="setPreID">
+        update Doc
+        <set>
+        preID = #{pID,jdbcType=VARCHAR}
+        </set>
+        where docID = #{docID,jdbcType=VARCHAR}
+    </update>
+
+
+
+
+</mapper>

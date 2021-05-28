@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pilot.hospitalmanagement.dao.IMedicineDao">
+    <resultMap id="MedicineResultMap" type="com.pilot.hospitalmanagement.Po.Medicine">
+        <id column="mID" jdbcType="INTEGER" property="mID" />
+        <result column="mName" jdbcType="VARCHAR" property="mName" />
+        <result column="mPrice" jdbcType="NUMERIC" property="mPrice" />
+        <result column="mSpecs" jdbcType="VARCHAR" property="mSpecs" />
+        <result column="mFactory" jdbcType="DATE" property="mFactory" />
+        <result column="mStock" jdbcType="INTEGER" property="mStock" />
+    </resultMap>
+<!--    添加药品-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.Medicine">
+        insert into Medicine(mID,mName,mPrice,mSpecs,mFactory,mStock)
+        values (#{mID,jdbcType=VARCHAR}, #{mName,jdbcType=VARCHAR} , #{mPrice,jdbcType=NUMERIC},
+                #{mSpecs,jdbcType=VARCHAR}, #{mFactory,jdbcType=VARCHAR}, #{mStock,jdbcType=INTEGER})
+    </insert>
+<!--    删除药品-->
+    <delete id="deleteBymID" parameterType="java.lang.String">
+        delete from Medicine
+        where mID = #{mID ,jdbcType = VARCHAR}
+    </delete>
+<!--    修改药品信息-->
+    <update id="update" parameterType="com.pilot.hospitalmanagement.Po.Medicine">
+        update Medicine
+        <set>
+            <if test="mName != null">
+                mName = #{mName,jdbcType = VARCHAR},
+            </if>
+
+            <if test="mPrice != null">
+                mPrice= #{mPrice,jdbcType=NUMERIC},
+            </if>
+            <if test="mSpecs != null">
+                mSpecs = #{mSpecs,jdbcType=VARCHAR},
+            </if>
+            <if test="mFactory!= null">
+                mFactory = #{mFactory,jdbcType=VARCHAR},
+            </if>
+            <if test="mStock!= null">
+                mStock = #{mStock,jdbcType=INTEGER},
+            </if>
+        </set>
+        where mID = #{mID,jdbcType=VARCHAR}
+    </update>
+
+<!--    按照药品ID查询药品-->
+    <select id="selectBymID" parameterType="java.lang.String" resultMap="MedicineResultMap">
+        select * from Medicine
+        where mID = #{mID , jdbcType = VARCHAR}
+    </select>
+<!--    查询所有药品-->
+    <select id="findAll" resultMap="MedicineResultMap">
+        select * from Medicine
+    </select>
+<!--    按药品名称查询-->
+    <select id="selectBymName" parameterType="java.lang.String" resultMap="MedicineResultMap">
+        select * from Medicine
+        where mName = #{mName , jdbcType = VARCHAR}
+    </select>
+<!--    按药品生产厂家查询-->
+    <select id="selectBymSpecs" parameterType="java.lang.String" resultMap="MedicineResultMap">
+        select * from Medicine
+        where mSpecs = #{mSpecs , jdbcType = VARCHAR}
+    </select>
+<!--    按药品类型查询-->
+    <select id="selectBymFactory" parameterType="java.lang.String" resultMap="MedicineResultMap">
+        select * from Medicine
+        where mFactory = #{mFactory, jdbcType = VARCHAR}
+    </select>
+
+    <select id="selectByKeyWord" parameterType="java.lang.String" resultMap="MedicineResultMap">
+        select * from Medicine
+        where mName like CONCAT (CONCAT('%', #{key}), '%')
+    </select>
+
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pilot.hospitalmanagement.dao.IMedicalTestDao">
+    <resultMap id="MedicalTestResultMap" type="com.pilot.hospitalmanagement.Po.MedicalTest">
+        <id column="testID" jdbcType="VARCHAR" property="testID" />
+        <result column="rID" jdbcType="VARCHAR" property="rID" />
+
+        <result column="testName" jdbcType="VARCHAR" property="testName" />
+
+        <result column="testPrice" jdbcType="NUMERIC" property="testPrice" />
+    </resultMap>
+
+<!--    //三种查询-->
+    <select id="selectBytestID" parameterType="java.lang.String"  resultMap="MedicalTestResultMap">
+        select * from MedicalTest
+        where testID = #{testID,jdbcType = VARCHAR}
+    </select>
+
+    <select id="selectBytestName" parameterType="java.lang.String"  resultMap="MedicalTestResultMap">
+        select * from MedicalTest
+        where testName = #{testName,jdbcType = VARCHAR}
+    </select>
+
+    <select id="selectByrID" parameterType="java.lang.String"  resultMap="MedicalTestResultMap">
+        select * from MedicalTest
+        where rID = #{rID,jdbcType = VARCHAR}
+    </select>
+
+    <select id="findAll" resultMap="MedicalTestResultMap">
+        select * from MedicalTest
+    </select>
+
+    <select id="searchByKey" parameterType="java.lang.String" resultMap="MedicalTestResultMap">
+        select * from MedicalTest
+        where testName like  CONCAT (CONCAT('%', #{key}), '%')
+    </select>
+
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">-->
+
+<!--</beans>-->
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pilot.hospitalmanagement.dao.IPharmacistDao">
+    <resultMap id="BaseResultMap" type="com.pilot.hospitalmanagement.Po.User">
+        <id column="phaID" jdbcType="VARCHAR" property="userID" />
+        <result column="phaCode" jdbcType="VARCHAR" property="userCode" />
+        <result column="phaName" jdbcType="VARCHAR" property="userName" />
+        <result column="phaGender" jdbcType="VARCHAR" property="userGender" />
+        <result column="phaBirthday" jdbcType="DATE" property="userBirthday" />
+        <result column="phaTel" jdbcType="VARCHAR" property="userTel" />
+
+    </resultMap>
+    <resultMap id="PharmacistResultMap" type="com.pilot.hospitalmanagement.Po.Pharmacist" extends="BaseResultMap">
+
+    </resultMap>
+
+
+<!--    添加配药师-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.Pharmacist">
+        insert into Pharmacist (phaID,phaCode,phaName,phaBirthday,phaGender,phaTel
+        )
+        values (#{userID,jdbcType=VARCHAR},#{userCode,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{userBirthday,jdbcType=DATE}
+        ,#{userGender,jdbcType=VARCHAR},#{userTel,jdbcType=VARCHAR})
+    </insert>
+
+<!--    按ID删除配药师-->
+    <delete id="deleteByphaID" parameterType="java.lang.String">
+        delete from Pharmacist
+        where phaID =#{phaID ,jdbcType = VARCHAR}
+    </delete>
+
+<!--    更新配药师信息-->
+    <update id="update" parameterType="com.pilot.hospitalmanagement.Po.Pharmacist">
+        update Pharmacist
+        <set>
+            <if test="userCode != null">
+                phaCode = #{userCode,jdbcType = VARCHAR},
+            </if>
+
+            <if test="userName != null">
+                phaName = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userBirthday != null">
+                phaBirthday = #{userBirthday,jdbcType=DATE},
+            </if>
+            <if test="userGender != null">
+                phaGender = #{userGender,jdbcType=VARCHAR},
+            </if>
+            <if test="userTel!= null">
+                phaTel = #{userTel,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where phaID = #{userID,jdbcType=VARCHAR}
+    </update>
+
+<!--    按照配药师ID查询-->
+    <select id="selectByphaID" parameterType="java.lang.String" resultMap="PharmacistResultMap">
+        select * from Pharmacist
+        where phaID =#{phaID ,jdbcType = VARCHAR}
+    </select>
+<!--     查询所有配药师 -->
+    <select id="findAll" resultMap="PharmacistResultMap">
+        select * from Pharmacist;
+    </select>
+    
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">-->
+
+<!--</beans>-->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pilot.hospitalmanagement.dao.IPatientDao">
+    <resultMap id="BaseResultMap" type="com.pilot.hospitalmanagement.Po.User">
+        <id column="pID" jdbcType="INTEGER" property="userID" />
+        <result column="pCode" jdbcType="VARCHAR" property="userCode" />
+        <result column="pName" jdbcType="VARCHAR" property="userName" />
+        <result column="pGender" jdbcType="VARCHAR" property="userGender" />
+        <result column="pBirthday" jdbcType="DATE" property="userBirthday" />
+        <result column="pTel" jdbcType="VARCHAR" property="userTel" />
+
+    </resultMap>
+    <resultMap id="PatientResultMap" type="com.pilot.hospitalmanagement.Po.Patient" extends="BaseResultMap">
+        <result column="pAddress" jdbcType="VARCHAR" property="pAddress" />
+        <result column="pHistoryIllness" jdbcType="VARCHAR" property="pHistoryIllness" />
+        <result column="isValid" jdbcType="BOOLEAN" property="isValid" />
+
+    </resultMap>
+
+<!--  注册  增加一条患者记录-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.Patient">
+        insert into Patient (pID, pCode,pName,pBirthday,pGender,pTel, pAddress,pHistoryIllness,isValid)
+
+        values (#{userID,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR}, #{userBirthday,jdbcType=DATE},
+                #{userGender,jdbcType=VARCHAR}, #{userTel,jdbcType=VARCHAR}, #{pAddress,jdbcType=VARCHAR},
+                #{pHistoryIllness,jdbcType=VARCHAR}, #{isValid,jdbcType=BOOLEAN}
+               )
+    </insert>
+<!--    根据用户ID查询用户信息-->
+<!--    <sql id="Base_Column_List">-->
+<!--        *-->
+<!--    </sql>-->
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="PatientResultMap">
+        select
+        *
+        from Patient
+        where pID =#{userID,jdbcType=VARCHAR}
+    </select>
+<!--    通过用户ID返回密码-->
+        <sql id="Base_Column_List">
+            pCode
+        </sql>
+    <select id="selectCodeByPrimaryKey" parameterType="java.lang.String" resultType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from Patient
+        where pID =#{userID,jdbcType=VARCHAR}
+    </select>
+
+<!--    注销用户-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from Patient
+        where pID =#{userID,jdbcType=VARCHAR}
+    </delete>
+
+<!--    更改用户信息-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.pilot.hospitalmanagement.Po.Patient">
+        update Patient
+        <set>
+            <if test="userCode != null">
+                pCode = #{userCode,jdbcType = VARCHAR},
+            </if>
+
+            <if test="userName != null">
+                pName = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userBirthday != null">
+                pBirthday = #{userBirthday,jdbcType=DATE},
+            </if>
+            <if test="userGender != null">
+                pGender = #{userGender,jdbcType=VARCHAR},
+            </if>
+            <if test="userTel!= null">
+                pTel = #{userTel,jdbcType=VARCHAR},
+            </if>
+            <if test="pAddress!= null">
+                pAddress = #{pAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="pHistoryIllness != null">
+                pHistoryIllness = #{pHistoryIllness,jdbcType=VARCHAR},
+            </if>
+            <if test="isValid != null">
+                isvalid = #{isValid,jdbcType=BOOLEAN},
+            </if>
+        </set>
+        where pID = #{userID,jdbcType=VARCHAR}
+    </update>
+</mapper>

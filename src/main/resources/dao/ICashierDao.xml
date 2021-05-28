@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">-->
+
+<!--</beans>-->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pilot.hospitalmanagement.dao.ICashierDao">
+    <resultMap id="BaseResultMap" type="com.pilot.hospitalmanagement.Po.User">
+        <id column="casID" jdbcType="VARCHAR" property="userID" />
+        <result column="casCode" jdbcType="VARCHAR" property="userCode" />
+        <result column="casName" jdbcType="VARCHAR" property="userName" />
+        <result column="casGender" jdbcType="VARCHAR" property="userGender" />
+        <result column="casBirthday" jdbcType="DATE" property="userBirthday" />
+        <result column="casTel" jdbcType="VARCHAR" property="userTel" />
+
+    </resultMap>
+    <resultMap id="CashierResultMap" type="com.pilot.hospitalmanagement.Po.Cashier" extends="BaseResultMap">
+
+    </resultMap>
+
+
+    <!--    添加配药师-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.Cashier">
+        insert into Cashier (casID,casCode,casName,casBirthday,casGender,casTel
+        )
+        values (#{userID,jdbcType=VARCHAR},#{userCode,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{userBirthday,jdbcType=DATE}
+               ,#{userGender,jdbcType=VARCHAR},#{userTel,jdbcType=VARCHAR})
+    </insert>
+
+    <!--    按ID删除配药师-->
+    <delete id="deleteBycasID" parameterType="java.lang.String">
+        delete from Cashier
+        where casID =#{casID ,jdbcType = VARCHAR}
+    </delete>
+
+    <!--    更新配药师信息-->
+    <update id="update" parameterType="com.pilot.hospitalmanagement.Po.Cashier">
+        update Cashier
+        <set>
+            <if test="userCode != null">
+                casCode = #{userCode,jdbcType = VARCHAR},
+            </if>
+
+            <if test="userName != null">
+                casName = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userBirthday != null">
+                casBirthday = #{userBirthday,jdbcType=DATE},
+            </if>
+            <if test="userGender != null">
+                casGender = #{userGender,jdbcType=VARCHAR},
+            </if>
+            <if test="userTel!= null">
+                casTel = #{userTel,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where casID = #{userID,jdbcType=VARCHAR}
+    </update>
+
+    <!--    按照配药师ID查询-->
+    <select id="selectBycasID" parameterType="java.lang.String" resultMap="CashierResultMap">
+        select * from Cashier
+        where casID =#{casID ,jdbcType = VARCHAR}
+    </select>
+    <!--     查询所有配药师 -->
+    <select id="findAll" resultMap="CashierResultMap">
+        select * from Cashier;
+    </select>
+
+</mapper>

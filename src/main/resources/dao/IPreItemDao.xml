@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pilot.hospitalmanagement.dao.IPreItemDao">
+    <resultMap id="PreItemResultMap" type="com.pilot.hospitalmanagement.Po.PrescriptionItem">
+
+        <result column="preID" jdbcType="VARCHAR" property="preID" />
+        <result column="mID" jdbcType="VARCHAR" property="mID" />
+
+        <result column="preItemMedicineCnt" jdbcType="INTEGER" property="preItemMedicineCnt" />
+
+        <result column="dosage" jdbcType="VARCHAR" property="dosage" />
+
+        <result column="notice" jdbcType="DATE" property="notice" />
+        <result column="isReturn" jdbcType="BOOLEAN" property="isReturn"/>
+
+        <result column="preStatus" jdbcType="VARCHAR" property="preStatus"/>
+
+    </resultMap>
+
+<!--    增加一个处方条目-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.PrescriptionItem">
+        insert into PrescriptionItem(preID,mID,preItemMedicineCnt ,dosage ,notice ,isReturn ,preStatus)
+        values (#{preID,jdbcType = VARCHAR},#{mID,jdbcType = VARCHAR}, #{preItemMedicineCnt,jdbcType = INTEGER},#{dosage,jdbcType = VARCHAR}
+        ,#{notice,jdbcType = VARCHAR},#{isReturn,jdbcType = BOOLEAN},#{preStatus,jdbcType = VARCHAR})
+    </insert>
+
+<!--    两种按ID查询-->
+    <select id="selectBypreID" parameterType="java.lang.String" resultMap="PreItemResultMap">
+        select * from PrescriptionItem
+        where preID = #{preID,jdbcType = VARCHAR}
+    </select>
+    <select id="selectBymID" parameterType="java.lang.String" resultMap="PreItemResultMap">
+        select * from PrescriptionItem
+        where mID = #{mID,jdbcType = VARCHAR}
+    </select>
+
+    <update id="changeReturn">
+        update PrescriptionItem
+        <set>
+            preStatus = #{status,jdbcType = BOOLEAN}
+        </set>
+        where preID = #{preID,jdbcType = VARCHAR}
+    </update>
+
+
+</mapper>

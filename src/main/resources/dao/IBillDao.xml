@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pilot.hospitalmanagement.dao.IBillDao">
+    <resultMap id="BillResultMap" type="com.pilot.hospitalmanagement.Po.Bill">
+        <id column="bID" jdbcType="VARCHAR" property="bID" />
+        <result column="casID" jdbcType="VARCHAR" property="casID" />
+        <result column="docID" jdbcType="VARCHAR" property="docID" />
+
+        <result column="bAmount" jdbcType="NUMERIC" property="bAmount" />
+        <result column="bTime" jdbcType="DATE" property="bTime" />
+        <result column="bStatus" jdbcType="VARCHAR" property="bStatus" />
+
+    </resultMap>
+
+<!--    新建账单-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.Bill">
+        insert into Bill (bID,casID,docID,bAmount,bTime,bStatus)
+        values (#{bID,jdbcType=VARCHAR},#{casID,jdbcType=VARCHAR},#{docID,jdbcType=VARCHAR},#{bAmount,jdbcType=NUMERIC}
+        ,#{bTime,jdbcType=DATE},#{bStatus,jdbcType=VARCHAR});
+    </insert>
+
+<!--    两个查询-->
+    <select id="selectBybID" parameterType="java.lang.String" resultMap="BillResultMap">
+        select * from Bill
+        where bID  = #{bID,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectBydocID" parameterType="java.lang.String" resultMap="BillResultMap">
+        select * from Bill
+        where docID  = #{docID,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

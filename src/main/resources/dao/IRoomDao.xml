@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pilot.hospitalmanagement.dao.IRoomDao">
+    <resultMap id="RoomResultMap" type="com.pilot.hospitalmanagement.Po.Room">
+        <id column="rID" jdbcType="VARCHAR" property="rID"/>
+        <result column="rName" jdbcType="VARCHAR" property="rName" />
+        <result column="rDescription" jdbcType="VARCHAR" property="rDescription" />
+        <result column="rAppointmentTime" jdbcType="VARCHAR" property="rAppointmentTime" />
+    </resultMap>
+
+<!--    增加科室-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.Room">
+        insert into Room(rID,rName,rDescription,rAppointmentTime)
+
+        values(#{rID,jdbcType = VARCHAR} , #{rName , jdbcType = VARCHAR}, #{rDescription,jdbcType = VARCHAR},
+               #{rAppointmentTime,jdbcType = VARCHAR})
+    </insert>
+<!--    删除科室-->
+    <delete id="deleteByrID" parameterType="java.lang.String">
+        delete from Room
+        where rID = #{rID,jdbcType=VARCHAR}
+    </delete>
+<!--    更新科室-->
+    <update id="update" parameterType="java.lang.String">
+        update Doc
+        <set>
+            <if test="rName != null">
+                rName =  #{rName,jdbcType=VARCHAR},
+            </if>
+            <if test="rDescription != null">
+                rDescription = #{rDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="rAppointmentTime != null">
+                rAppointmentTime=  #{rAppointmentTime,jdbcType=VARCHAR},
+            </if>
+
+        </set>
+        where rID = #{rID,jdbcType=VARCHAR}
+    </update>
+<!--    查询已有的所有科室-->
+    <select id="findAll" resultMap="RoomResultMap" parameterType="java.lang.String">
+        select * from Room
+    </select>
+    <select id="findByRid" resultType="com.pilot.hospitalmanagement.Po.Room"> select * from Room where rID = #{rID,jdbcType = VARCHAR}  </select>
+
+    <select id="selectByID" parameterType="java.lang.String" resultMap="RoomResultMap">
+        select * from Room
+        where rID = #{rID, jdbcType=VARCHAR}
+    </select>
+
+</mapper>

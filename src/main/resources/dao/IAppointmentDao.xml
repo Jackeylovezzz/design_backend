@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pilot.hospitalmanagement.dao.IAppointmentDao">
+    <resultMap id="AppointmentResultMap" type="com.pilot.hospitalmanagement.Po.Appointment">
+        <id column="aID" jdbcType="VARCHAR" property="aID"/>
+
+        <result column="dID" jdbcType="VARCHAR" property="dID" />
+        <result column="pID" jdbcType="VARCHAR" property="pID" />
+        <result column="rID" jdbcType="VARCHAR" property="rID" />
+
+        <result column="aStatus" jdbcType="VARCHAR" property="aStatus" />
+
+        <result column="aCreateTime" jdbcType="DATE" property="aCreateTime" />
+        <result column="aTime" jdbcType="DATE" property="aTime"/>
+
+        <result column="aType" jdbcType="VARCHAR" property="aType"/>
+        <result column="hasArrived" jdbcType="BOOLEAN" property="hasArrived"/>
+    </resultMap>
+
+<!--    新建一个专家预约-->
+    <insert id="insert_doctor" parameterType="com.pilot.hospitalmanagement.Po.Appointment">
+        insert into Appointment (aID,dID,pID,aStatus,aCreateTime,aTime,aType,hasArrived)
+
+        values (#{aID,jdbcType=VARCHAR}, #{dID,jdbcType=VARCHAR}, #{pID,jdbcType=VARCHAR},
+                #{aStatus,jdbcType=VARCHAR}, #{aCreateTime,jdbcType=DATE}, #{aTime,jdbcType=DATE}, #{aType,jdbcType=VARCHAR},
+                #{hasArrived,jdbcType=BOOLEAN})
+    </insert>
+    <!--    新建一个科室预约-->
+    <insert id="insert_room" parameterType="com.pilot.hospitalmanagement.Po.Appointment">
+        insert into Appointment (aID,pID,rID,aStatus,aCreateTime,aTime,aType,hasArrived)
+
+        values (#{aID,jdbcType=VARCHAR}, #{pID,jdbcType=VARCHAR}, #{rID,jdbcType=VARCHAR},
+                #{aStatus,jdbcType=VARCHAR}, #{aCreateTime,jdbcType=DATE}, #{aTime,jdbcType=DATE}, #{aType,jdbcType=VARCHAR},
+                #{hasArrived,jdbcType=BOOLEAN})
+    </insert>
+
+<!--    取消预约-->
+    <delete id="deleteByaID" parameterType="java.lang.String">
+        delete from Appointment
+        where aID = #{aID , jdbcType=VARCHAR }
+    </delete>
+<!--    查看某科室当前排队人数-->
+    <select id="CountByrID" parameterType="java.lang.String" resultMap="AppointmentResultMap">
+        select * from Appointment
+        where aStatus ="排队中" and rID = #{rID , jdbcType=VARCHAR }  ;
+    </select>
+
+<!--    查看某专家当前排队的人数-->
+    <select id="CountBydID" parameterType="java.lang.String" resultMap="AppointmentResultMap">
+        select * from Appointment
+        where aStatus ="排队中" and dID = #{dID , jdbcType=VARCHAR }  ;
+    </select>
+<!--    按病人ID查询病人当前的预约-->
+    <select id="selectBypID" parameterType="java.lang.String" resultMap="AppointmentResultMap">
+        select * from Appointment
+        where  pID = #{pID , jdbcType=VARCHAR }
+    </select>
+<!--    查看某专家某天的预约-->
+    <select id="selectBydID"  resultMap="AppointmentResultMap">
+        select * from Appointment
+        where  aTime = #{param2} and dID = #{param1};
+    </select>
+<!--    查看某科室某天的预约-->
+    <select id="selectByrID"  resultMap="AppointmentResultMap">
+        select * from Appointment
+        where  aTime = #{param2} and rID = #{param1};
+    </select>
+<!--    按aID查询预约-->
+    <select id="selectByaID" resultMap="AppointmentResultMap">
+        select * from Appointment
+        where aID = #{aID , jdbcType = VARCHAR}
+    </select>
+<!--    按aID查询有效预约-->
+    <select id="selectValidAppBypID" resultMap="AppointmentResultMap">
+        select * from Appointment
+        where aID = #{aID , jdbcType = VARCHAR} and aStatus = '排队中'
+    </select>
+
+<!--    改变预约状态-->
+    <update id="updateaStatus" >
+        update Appointment
+        <set>
+            aStatus = #{param2}
+        </set>
+        where aID = #{param1}
+    </update>
+
+</mapper>

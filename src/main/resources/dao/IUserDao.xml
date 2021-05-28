@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">-->
+
+
+<!--</beans>-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pilot.hospitalmanagement.dao.IUserDao">
+    <resultMap id="BaseResultMap" type="com.pilot.hospitalmanagement.Po.User">
+        <id column="userID" jdbcType="INTEGER" property="userID" />
+        <result column="userCode" jdbcType="VARCHAR" property="userCode" />
+        <result column="userName" jdbcType="VARCHAR" property="userName" />
+        <result column="userGender" jdbcType="VARCHAR" property="userGender" />
+        <result column="userBirthday" jdbcType="VARCHAR" property="userBirthday" />
+        <result column="userTel" jdbcType="VARCHAR" property="userTel" />
+
+    </resultMap>
+<!-- 配置查询所有操作 -->
+<select id="findAll" resultType="com.pilot.hospitalmanagement.Po.User">
+    select * from User;
+</select>
+
+</mapper>
+
+
+
+

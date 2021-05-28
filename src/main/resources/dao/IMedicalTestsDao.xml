@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pilot.hospitalmanagement.dao.IMedicalTestsDao">
+    <resultMap id="MedicalTestsResultMap" type="com.pilot.hospitalmanagement.Po.MedicalTests">
+        <id column="cID" jdbcType="VARCHAR" property="cID" />
+        <result column="docID" jdbcType="VARCHAR" property="docID" />
+
+        <result column="cDescription" jdbcType="VARCHAR" property="cDescription" />
+
+        <result column="cCreatTime" jdbcType="DATE" property="cCreatTime" />
+    </resultMap>
+
+<!--    添加检查单-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.MedicalTests">
+        insert into MedicalTests(cID , docID ,cDescription ,cCreatTime)
+        values (#{cID,jdbcType = VARCHAR},#{docID,jdbcType = VARCHAR},#{cDescription,jdbcType = VARCHAR}
+        ,#{cCreatTime,jdbcType = DATE})
+    </insert>
+
+<!--    查询-->
+    <select id="selectBycID" parameterType="java.lang.String" resultMap="MedicalTestsResultMap">
+        select * from MedicalTests
+        where cID = #{cID,jdbcType = VARCHAR}
+    </select>
+
+    <select id="selectBydocID" parameterType="java.lang.String" resultMap="MedicalTestsResultMap">
+        select * from MedicalTests
+        where docID = #{docID,jdbcType = VARCHAR}
+    </select>
+
+
+</mapper>
+
+
