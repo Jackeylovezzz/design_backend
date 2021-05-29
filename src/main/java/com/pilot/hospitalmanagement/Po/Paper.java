@@ -15,8 +15,8 @@ import java.util.Date;
 public class Paper {
     private String paperID; // 论文编号
 
-    private String pID; // 审稿者ID
-    private String dID; // 投稿者ID
+    private String pID; // tou稿者ID
+    private String dID; // shen稿者ID
     private String rID; // 会议ID
 
     public String paperName; // 论文题目
@@ -28,4 +28,3 @@ public class Paper {
     public String paperFileName; // 存放路径
 
 }
-

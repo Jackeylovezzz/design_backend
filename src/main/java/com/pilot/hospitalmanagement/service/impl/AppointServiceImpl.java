@@ -2,6 +2,7 @@ package com.pilot.hospitalmanagement.service.impl;
 
 import com.pilot.hospitalmanagement.Po.Appointment;
 import com.pilot.hospitalmanagement.Po.Doctor;
+import com.pilot.hospitalmanagement.Po.Paper;
 import com.pilot.hospitalmanagement.Po.Room;
 import com.pilot.hospitalmanagement.dao.IAppointmentDao;
 import com.pilot.hospitalmanagement.dao.IPaperDao;
@@ -73,29 +74,30 @@ public class AppointServiceImpl {
         return iAppointmentDAO.selectBypID(UserID).get(0);
     }
 
-    public Map<String, String> findAppointmentByUserId(String userId) {
+    public Appointment findAppointmentByUserId(String userId) {
         List<Appointment> appointments = iAppointmentDAO.selectBypID(userId);
-        Map<String, String> res = new HashMap<>();
-        ;
-        for (Appointment appointment : appointments) {
-            if ("待排队".equals(appointment.getAStatus())) {
-                System.out.println(appointment.toString());
-                if ("expert".equals(appointment.getAType())) {
-                    res.put("expert", iDoctorDao.selectByPrimaryID(appointment.getDID()).getUserName());
-                    res.put("type", appointment.getAType());
+        // Map<String, String> res = new HashMap<>();
+        // ;
+        // for (Appointment appointment : appointments) {
+        // if ("待排队".equals(appointment.getAStatus())) {
+        // System.out.println(appointment.toString());
+        // if ("expert".equals(appointment.getAType())) {
+        // res.put("expert",
+        // iDoctorDao.selectByPrimaryID(appointment.getDID()).getUserName());
+        // res.put("type", appointment.getAType());
 
-                } else {
-                    res.put("dept", iRoomDao.findByRid(appointment.getRID()).getRName());
-                    res.put("type", appointment.getAType());
+        // } else {
+        // res.put("dept", iRoomDao.findByRid(appointment.getRID()).getRName());
+        // res.put("type", appointment.getAType());
 
-                }
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                res.put("date", (sdf.format(appointment.getATime())));
+        // }
+        // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        // res.put("date", (sdf.format(appointment.getATime())));
 
-            }
-        }
+        // }
+        // }
 
-        return res;
+        return appointments.get(0);
     }
 
     public List<Doctor> getAllExpertByDept(String deptId) {
@@ -145,29 +147,26 @@ public class AppointServiceImpl {
         return iPaperDao.selectByrID(rID);
     }
 
-    public int addPaper(Object paper) {
+    public int addPaper(Paper paper) {
         String paperid = UUID.randomUUID().toString().replaceAll("-", "");
         paper.setPaperID(paperid);
-        paper.setPaperStatus("待评审");
+        paper.setPaperState("待评审");
 
-        // paper.setACreateTime(new Date());
-        // if ("expert".equals(appointment.getAType())) {
+        // List<Doctor> doctorList = iDoctorDao.
+        paper.setPID("1233");
+
         return iPaperDao.insert(paper);
-        // } else {
-        // return iAppointmentDAO.insert_room(appointment);
-        // }
-        // return 0;
     }
 
     public int addComment(String comment, String paperId) {
-        Paper paper = iPaperDao.selelctByPaperID(paperId);
+        Paper paper = iPaperDao.selectBypaperID(paperId);
         paper.setPaperAdvice(comment);
-        return iPaperDao.updatePaper(paper);
+        return iPaperDao.updatepaper(paper);
     }
 
     public int addMeeting(Room room) {
         String roomID = UUID.randomUUID().toString().replaceAll("-", "");
         room.setRID(roomID);
-        iRoomDao.insert(room);
+        return iRoomDao.insert(room);
     }
 }

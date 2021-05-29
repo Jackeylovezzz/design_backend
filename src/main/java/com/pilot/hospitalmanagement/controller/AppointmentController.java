@@ -2,6 +2,7 @@ package com.pilot.hospitalmanagement.controller;
 
 import com.pilot.hospitalmanagement.Po.Appointment;
 import com.pilot.hospitalmanagement.Po.Doctor;
+import com.pilot.hospitalmanagement.Po.Paper;
 import com.pilot.hospitalmanagement.Po.Room;
 import com.pilot.hospitalmanagement.service.AppointService;
 import com.pilot.hospitalmanagement.service.impl.AppointServiceImpl;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,7 +49,7 @@ public class AppointmentController {
     }
 
     // 查找某个科室信息
-    @GetMapping("/queryOneDept/{rID}")
+    @GetMapping("/queryOneDept/{roomID}")
     public Resbody queryOneDept(@PathVariable("roomID") String rID) {
         try {
             Room depts = appointService.getOneDept(rID);
@@ -65,14 +68,21 @@ public class AppointmentController {
     @PostMapping("/addMeeting")
     public Resbody addMeeting(@RequestBody Map<String, String> params) {
         try {
-            String rID = params.get("meetingID");
             Room room = new Room();
-            room.setRID(rID);
+            room.setRName(params.get("meetingName"));
+            // TODO 完善信息
+            // room.setPID(params.get("meetingName"));
+            // room.setRName(params.get("meetingName"));
+            // room.setRName(params.get("meetingName"));
+            String strDateFormat = "yyyy-MM-dd HH:mm:ss";
+            System.out.println(params.get("date"));
+            SimpleDateFormat sdf = new SimpleDateFormat(strDateFormat);
+            // paper.setRTime((sdf.parse(params.get("date"))));
             int cnt = appointService.addMeeting(room);
             if (cnt == 1) {
-                return ResbodyUtil.success("修改成功");
+                return ResbodyUtil.success("添加成功");
             } else {
-                return ResbodyUtil.success("修改失败");
+                return ResbodyUtil.success("添加失败");
             }
         } catch (Exception e) {
             return ResbodyUtil.error(0, e.toString());
@@ -80,10 +90,10 @@ public class AppointmentController {
     }
 
     // 查找某个科室信息
-    @GetMapping("/getAllPaperUnderRoom/{rID}")
+    @GetMapping("/getAllPaperUnderRoom/{roomID}")
     public Resbody getAllPaperUnderRoom(@PathVariable("roomID") String rID) {
         try {
-            List<Object> paperList = appointService.getAllPaperUnderDept(rID);
+            List<Paper> paperList = appointService.getAllPaperUnderDept(rID);
             if (null == paperList) {
                 return ResbodyUtil.error(0, "查找失败");
             } else {
@@ -141,7 +151,7 @@ public class AppointmentController {
     @GetMapping("/queryAppointment/{userId}")
     public Resbody queryAppointment(@PathVariable("userId") String userId) {
         try {
-            Map<String, String> appoints = appointService.findAppointmentByUserId(userId);
+            Appointment appoints = appointService.findAppointmentByUserId(userId);
             if (null == appoints) {
                 return ResbodyUtil.error(0, "查找失败");
             } else {
@@ -233,16 +243,19 @@ public class AppointmentController {
 
     @PostMapping("/upload")
     @ResponseBody
-    public Resbody upload(@RequestBody Map<String, Object> params) {
-        MultipartFile file = (MultipartFile) params.get("file");
-        // Paper paper = new Paper();
-        // paper.setPID(params.get("pID")); // 投稿者ID
-        // paper.setRID(); // 会议ID
-        // paper.setPaperName(); //
-        // paper.setPaperAbstract();
-        // paper.setPaperZuozhe();
-        // paper.setPaperScore();
-        // paper.setPaperAdvice();
+    public Resbody upload(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam String pID,
+            @RequestParam String paperName, @RequestParam String paperAbstract, @RequestParam String paperAuthor,
+            @RequestParam String rID, HttpServletRequest request) {
+        // System.out.println(obj);
+        // MultipartFile file = (MultipartFile) params.get("file");
+        Paper paper = new Paper();
+        paper.setPID(pID); // 投稿者ID
+        paper.setRID(rID); // 会议ID
+        paper.setPaperName(paperName); //
+        paper.setPaperAbstract(paperAbstract);
+        paper.setPaperZuozhe(paperAuthor);
+        // paper.setPaperScore(paperScore);
+        // paper.setPaperAdvice(paperAdvice);
         // paper.setPaperState();
         // 获取基础信息
         if (file.isEmpty()) {
@@ -251,8 +264,8 @@ public class AppointmentController {
 
         String fileName = file.getOriginalFilename();
         // 传进去路径
-        // paper.setPaperFileName();
-        // int res = appointService.addPaper(paper);
+        paper.setPaperFileName(fileName);
+        int res = appointService.addPaper(paper);
         String filePath = "D:\\Paper\\";
         File dest = new File(filePath + fileName);
         try {
