@@ -109,17 +109,13 @@ public class AppointmentController {
     public Resbody makeAppointment(@RequestParam Map<String, String> params) {
         try {
             Appointment appointment = new Appointment();
-            appointment.setAType(params.get("type"));
+            // appointment.setAType(params.get("type"));
             appointment.setPID(params.get("userID"));
-            if ("expert".equals(appointment.getAType())) {
-                appointment.setDID(params.get("choice"));
-            } else {
-                appointment.setRID(params.get("choice"));
-            }
-            String strDateFormat = "yyyy-MM-dd";
-            System.out.println(params.get("date"));
-            SimpleDateFormat sdf = new SimpleDateFormat(strDateFormat);
-            appointment.setATime((sdf.parse(params.get("date"))));
+            appointment.setRID(params.get("meetingID"));
+            // String strDateFormat = "yyyy-MM-dd HH:mm:ss";
+            // System.out.println(params.get("date"));
+            // SimpleDateFormat sdf = new SimpleDateFormat(strDateFormat);
+            // appointment.setACreateTime((sdf.parse(params.get("date"))));
             int res = appointService.addAppointment(appointment);
             if (res == 0) {
                 return ResbodyUtil.error(res, "预约失败");
@@ -285,7 +281,8 @@ public class AppointmentController {
         try {
             String comment = params.get("comment");
             String paperId = params.get("paperId");
-            int cnt = appointService.addComment(comment, paperId);
+            String score = params.get("score");
+            int cnt = appointService.addComment(comment, paperId, score);
             if (cnt == 1) {
                 return ResbodyUtil.success("修改成功");
             } else {

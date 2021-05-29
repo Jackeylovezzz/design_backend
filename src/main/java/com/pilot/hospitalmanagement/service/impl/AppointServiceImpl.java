@@ -23,6 +23,7 @@ import java.util.UUID;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author Paul
@@ -45,13 +46,8 @@ public class AppointServiceImpl {
         String aid = UUID.randomUUID().toString().replaceAll("-", "");
         appointment.setAID(aid);
         appointment.setAStatus("待排队");
-
         appointment.setACreateTime(new Date());
-        if ("expert".equals(appointment.getAType())) {
-            return iAppointmentDAO.insert_doctor(appointment);
-        } else {
-            return iAppointmentDAO.insert_room(appointment);
-        }
+        return iAppointmentDAO.insert_room(appointment);
 
     }
 
@@ -152,15 +148,19 @@ public class AppointServiceImpl {
         paper.setPaperID(paperid);
         paper.setPaperState("待评审");
 
-        // List<Doctor> doctorList = iDoctorDao.
-        paper.setPID("1233");
+        List<Doctor> doctorList = iDoctorDao.findAll();
+        Random r = new Random();
+        int idx = r.nextInt(doctorList.size());
+        paper.setDID(doctorList.get(idx).getUserID());
 
         return iPaperDao.insert(paper);
     }
 
-    public int addComment(String comment, String paperId) {
+    public int addComment(String comment, String paperId, String score) {
         Paper paper = iPaperDao.selectBypaperID(paperId);
         paper.setPaperAdvice(comment);
+        paper.setPaperScore(score);
+        paper.setPaperState("已评审");
         return iPaperDao.updatepaper(paper);
     }
 
