@@ -24,7 +24,7 @@ public class IDoctorTest {
 ////        System.out.print(doctor.getUserID());
 //        System.out.println(iDoctorDao.selectByrID("105"));
 
-
+        System.out.println(iDoctorDao.findAll());
 
     }
 }

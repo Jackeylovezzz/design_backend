@@ -30,6 +30,11 @@
                )
     </insert>
 
+    <!--    查询所有病历-->
+    <select id="findAll" resultMap="DoctorResultMap">
+        select * from Doctor
+    </select>
+
     <select id="selectByPrimaryID" parameterType="java.lang.String" resultMap="DoctorResultMap">
         select
             *
