@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+<!--       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">-->
+
+<!--</beans>-->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pilot.hospitalmanagement.dao.IPaperDao">
+    <resultMap id="PaperResultMap" type="com.pilot.hospitalmanagement.Po.Paper">
+        <id column="paperID" jdbcType="VARCHAR" property="paperID" />
+        <result column="pID" jdbcType="VARCHAR" property="pID" />
+        <result column="dID" jdbcType="VARCHAR" property="dID" />
+        <result column="rID" jdbcType="VARCHAR" property="rID" />
+
+        <result column="paperName" jdbcType="VARCHAR" property="paperName" />
+        <result column="paperAbstract" jdbcType="VARCHAR" property="paperAbstract" />
+        <result column="paperZuozhe" jdbcType="VARCHAR" property="paperZuozhe" />
+        <result column="paperScore" jdbcType="VARCHAR" property="paperScore" />
+        <result column="paperAdvice" jdbcType="VARCHAR" property="paperAdvice" />
+        <result column="paperState" jdbcType="VARCHAR" property="paperState" />
+        <result column="paperFileName" jdbcType="VARCHAR" property="paperFileName" />
+
+    </resultMap>
+
+
+
+<!--新增一篇论文-->
+    <insert id="insert" parameterType="com.pilot.hospitalmanagement.Po.Paper">
+        insert into Paper (paperID,pID,dID,rID,
+                            paperName, paperAbstract,paperZuozhe, paperScore,paperAdvice,paperState,paperFileName)
+        values (#{paperID,jdbcType=VARCHAR}, #{pID,jdbcType=VARCHAR},#{dID,jdbcType=VARCHAR},#{rID,jdbcType=VARCHAR},
+                #{paperName,jdbcType=VARCHAR}, #{paperAbstract,jdbcType=VARCHAR},#{paperZuozhe,jdbcType=VARCHAR},#{paperScore,jdbcType=VARCHAR},
+                #{paperAdvice,jdbcType=VARCHAR}, #{paperState,jdbcType=VARCHAR}, #{paperFileName,jdbcType=VARCHAR}
+               )
+    </insert>
+
+
+
+    <update id="updatepaper" parameterType="com.pilot.hospitalmanagement.Po.Paper">
+        update Paper
+        <set>
+            <if test="paperID != null">
+                paperID =  #{paperID,jdbcType=VARCHAR},
+            </if>
+            <if test="pID != null">
+                pID =  #{pID,jdbcType=VARCHAR},
+            </if>
+            <if test="dID != null">
+                dID =  #{dID,jdbcType=VARCHAR},
+            </if>
+            <if test="dID != null">
+                rID =  #{rID,jdbcType=VARCHAR},
+            </if>
+            <if test="paperName != null">
+                paperName =  #{paperName,jdbcType=VARCHAR},
+            </if>
+            <if test="paperAbstract != null">
+                paperAbstract = #{paperAbstract,jdbcType=VARCHAR},
+            </if>
+            <if test="paperZuozhe != null">
+                paperZuozhe = #{paperZuozhe,jdbcType=DATE},
+            </if>
+            <if test="paperScore != null">
+                paperScore = #{paperScore,jdbcType=DATE},
+            </if>
+            <if test="paperAdvice != null">
+                paperAdvice = #{paperAdvice,jdbcType=DATE},
+            </if>
+            <if test="paperState!= null">
+                paperState = #{paperState,jdbcType=VARCHAR},
+            </if>
+            <if test="paperFileName!= null">
+                paperFileName = #{paperFileName,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where paperID = #{paperID,jdbcType=VARCHAR}
+    </update>
+    
+<!--    按照论文ID查询论文-->
+
+    <select id="selectBypaperID" parameterType="java.lang.String" resultMap="PaperResultMap">
+        select
+        *
+        from Paper
+        where paperID =#{paperID,jdbcType=VARCHAR}
+    </select>
+
+
+<!--    按照会议ID查询论文-->
+    <select id="selectByrID" parameterType="java.lang.String" resultMap="PaperResultMap">
+        select * from Paper
+        where rID = #{rID,jdbcType=VARCHAR}
+    </select>
+
+<!--    按照审稿者ID查询论文-->
+    <select id="selectBydID" parameterType="java.lang.String" resultMap="PaperResultMap">
+        select * from Paper
+        where dID = #{dID,jdbcType=VARCHAR}
+    </select>
+
+
+
+
+
+
+</mapper>
