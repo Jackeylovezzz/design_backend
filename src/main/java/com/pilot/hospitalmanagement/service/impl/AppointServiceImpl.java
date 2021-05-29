@@ -4,7 +4,7 @@ import com.pilot.hospitalmanagement.Po.Appointment;
 import com.pilot.hospitalmanagement.Po.Doctor;
 import com.pilot.hospitalmanagement.Po.Room;
 import com.pilot.hospitalmanagement.dao.IAppointmentDao;
-import com.pilot.hospitalmanagement.dao.IAppointmentDao;
+import com.pilot.hospitalmanagement.dao.IPaperDao;
 import com.pilot.hospitalmanagement.dao.IDocDao;
 import com.pilot.hospitalmanagement.dao.IDoctorDao;
 import com.pilot.hospitalmanagement.dao.IPatientDao;
@@ -36,6 +36,9 @@ public class AppointServiceImpl {
     IRoomDao iRoomDao;
     @Autowired
     IDoctorDao iDoctorDao;
+
+    @Autowired
+    IPaperDao iPaperDao;
 
     public int addAppointment(Appointment appointment) {
         String aid = UUID.randomUUID().toString().replaceAll("-", "");
@@ -130,5 +133,41 @@ public class AppointServiceImpl {
         Doctor doctor = iDoctorDao.selectByPrimaryID(id);
         doctor.setDAppointmentLimit(limit);
         return iDoctorDao.updateAppointmentLimit(doctor);
+    }
+
+    public Room getOneDept(String rID) {
+        return iRoomDao.findByRid(rID);
+    }
+
+    public List<Paper> getAllPaperUnderDept(String rID) {
+        // return iRoomDao.findByRid(rID);
+        // 返回符合条件的文章列表
+        return iPaperDao.selectByrID(rID);
+    }
+
+    public int addPaper(Object paper) {
+        String paperid = UUID.randomUUID().toString().replaceAll("-", "");
+        paper.setPaperID(paperid);
+        paper.setPaperStatus("待评审");
+
+        // paper.setACreateTime(new Date());
+        // if ("expert".equals(appointment.getAType())) {
+        return iPaperDao.insert(paper);
+        // } else {
+        // return iAppointmentDAO.insert_room(appointment);
+        // }
+        // return 0;
+    }
+
+    public int addComment(String comment, String paperId) {
+        Paper paper = iPaperDao.selelctByPaperID(paperId);
+        paper.setPaperAdvice(comment);
+        return iPaperDao.updatePaper(paper);
+    }
+
+    public int addMeeting(Room room) {
+        String roomID = UUID.randomUUID().toString().replaceAll("-", "");
+        room.setRID(roomID);
+        iRoomDao.insert(room);
     }
 }

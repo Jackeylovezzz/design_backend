@@ -10,12 +10,17 @@ import com.pilot.hospitalmanagement.utils.ResbodyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin
 @RestController
@@ -38,6 +43,55 @@ public class AppointmentController {
             return ResbodyUtil.error(0, e.toString());
         }
 
+    }
+
+    // 查找某个科室信息
+    @GetMapping("/queryOneDept/{rID}")
+    public Resbody queryOneDept(@PathVariable("roomID") String rID) {
+        try {
+            Room depts = appointService.getOneDept(rID);
+            if (null == depts) {
+                return ResbodyUtil.error(0, "查找失败");
+            } else {
+                return ResbodyUtil.success(depts, "查找成功");
+            }
+        } catch (Exception e) {
+            return ResbodyUtil.error(0, e.toString());
+        }
+
+    }
+
+    // 添加评审意见
+    @PostMapping("/addMeeting")
+    public Resbody addMeeting(@RequestBody Map<String, String> params) {
+        try {
+            String rID = params.get("meetingID");
+            Room room = new Room();
+            room.setRID(rID);
+            int cnt = appointService.addMeeting(room);
+            if (cnt == 1) {
+                return ResbodyUtil.success("修改成功");
+            } else {
+                return ResbodyUtil.success("修改失败");
+            }
+        } catch (Exception e) {
+            return ResbodyUtil.error(0, e.toString());
+        }
+    }
+
+    // 查找某个科室信息
+    @GetMapping("/getAllPaperUnderRoom/{rID}")
+    public Resbody getAllPaperUnderRoom(@PathVariable("roomID") String rID) {
+        try {
+            List<Object> paperList = appointService.getAllPaperUnderDept(rID);
+            if (null == paperList) {
+                return ResbodyUtil.error(0, "查找失败");
+            } else {
+                return ResbodyUtil.success(paperList, "查找成功");
+            }
+        } catch (Exception e) {
+            return ResbodyUtil.error(0, e.toString());
+        }
     }
 
     @PostMapping("/makeAppointment")
@@ -167,6 +221,58 @@ public class AppointmentController {
             String id = params.get("id");
             String appointmentTime = params.get("appointmentTime");
             int cnt = appointService.changeAppointmentTime(id, type, appointmentTime);
+            if (cnt == 1) {
+                return ResbodyUtil.success("修改成功");
+            } else {
+                return ResbodyUtil.success("修改失败");
+            }
+        } catch (Exception e) {
+            return ResbodyUtil.error(0, e.toString());
+        }
+    }
+
+    @PostMapping("/upload")
+    @ResponseBody
+    public Resbody upload(@RequestBody Map<String, Object> params) {
+        MultipartFile file = (MultipartFile) params.get("file");
+        // Paper paper = new Paper();
+        // paper.setPID(params.get("pID")); // 投稿者ID
+        // paper.setRID(); // 会议ID
+        // paper.setPaperName(); //
+        // paper.setPaperAbstract();
+        // paper.setPaperZuozhe();
+        // paper.setPaperScore();
+        // paper.setPaperAdvice();
+        // paper.setPaperState();
+        // 获取基础信息
+        if (file.isEmpty()) {
+            return ResbodyUtil.success("上传失败");
+        }
+
+        String fileName = file.getOriginalFilename();
+        // 传进去路径
+        // paper.setPaperFileName();
+        // int res = appointService.addPaper(paper);
+        String filePath = "D:\\Paper\\";
+        File dest = new File(filePath + fileName);
+        try {
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdir();
+            }
+            file.transferTo(dest);
+            return ResbodyUtil.success("上传成功");
+        } catch (IOException e) {
+            return ResbodyUtil.success("上传失败");
+        }
+    }
+
+    // 添加评审意见
+    @PostMapping("/addComment")
+    public Resbody addComment(@RequestBody Map<String, String> params) {
+        try {
+            String comment = params.get("comment");
+            String paperId = params.get("paperId");
+            int cnt = appointService.addComment(comment, paperId);
             if (cnt == 1) {
                 return ResbodyUtil.success("修改成功");
             } else {
