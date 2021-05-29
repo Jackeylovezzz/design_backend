@@ -9,6 +9,9 @@ public interface IDoctorDao {
     // 添加医生
     void insert(Doctor record);
 
+    //获取所有医生
+    List<Doctor> findAll();
+
     // 按ID查询医生
     Doctor selectByPrimaryID(String dID);
 
